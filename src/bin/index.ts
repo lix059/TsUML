@@ -21,11 +21,10 @@ import { getUrl } from "../core";
       // );
       const url = await getUrl(
         "/Users/xiong.li/Desktop/work/credit_fronted/risk_admin/credit_risk_admin/tsconfig.json",
-        "/Users/xiong.li/Desktop/work/credit_fronted/risk_admin/credit_risk_admin/src/components/bpmn/**/*.*"
+        "/Users/xiong.li/Desktop/work/credit_fronted/risk_admin/credit_risk_admin/src/components/bpmn/**/*.ts"
       );
-      console.log(url);
-      const opn = require("opn");
-      opn(url);
+      // const opn = require("opn");
+      //opn(url);
     }
   } catch (e) {
     console.log(chalk.redBright(e));
