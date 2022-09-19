@@ -1,0 +1,529 @@
+@startuml
+
+Factory : designer;
+Factory : errorHandler;
+Factory : metadatas;
+
+Factory : getNodeMetadata();
+Factory : getLineMetadata();
+Factory : createNodeByElement();
+Factory : createNode();
+Factory : createLineByRefers();
+Factory : createLine();
+Factory : createStartNode();
+Factory : createEndNode();
+Factory : createElements();
+
+BpmnModeler <|-- Modeler
+
+
+
+
+
+abstract Element
+Element : id;
+Element : name;
+Element : desc;
+Element : extInfo;
+Element : otherInfo;
+Element : designer;
+Element : errorHandler;
+Element : metadata;
+Element : nodeType;
+Element : compareStatus;
+
+Element : beforeClick();
+Element : beforeSelected();
+Element : beforeAdded();
+Element : afterAdded();
+Element : beforeRemoved();
+Element : afterRemoved();
+Element : saveBusinessInfo();
+Element : getBusinessInfo();
+Element : toXML();
+Element : validate();
+Element : compareTo();
+Element : accept();
+
+BpmnApi <|-- BpmnDesigner
+
+abstract BpmnDesigner
+BpmnDesigner : modeler;
+BpmnDesigner : modeling;
+BpmnDesigner : commandStack;
+BpmnDesigner : elementRegistry;
+BpmnDesigner : canvas;
+BpmnDesigner : readOnly;
+BpmnDesigner : errorHandler;
+BpmnDesigner : MAX_SCALE;
+BpmnDesigner : MIN_SCALE;
+BpmnDesigner : CURRENT_SCALE;
+BpmnDesigner : overlays;
+BpmnDesigner : domId;
+BpmnDesigner : onErrorBind;
+BpmnDesigner : onAsyncErrorBind;
+
+BpmnDesigner : initBpmnDesigner();
+BpmnDesigner : onError();
+BpmnDesigner : onAsyncError();
+BpmnDesigner : undo();
+BpmnDesigner : redo();
+BpmnDesigner : zoomByRadio();
+BpmnDesigner : zoom2FitView();
+BpmnDesigner : transferXML();
+BpmnDesigner : transferSVG();
+BpmnDesigner : setShapeStrokeColor();
+BpmnDesigner : setShapeNormal();
+BpmnDesigner : setShapeError();
+BpmnDesigner : setShapeSelected();
+BpmnDesigner : setShapeUnSelected();
+BpmnDesigner : setShapeFillColor();
+BpmnDesigner : getIconfontById();
+BpmnDesigner : setIconfontColor();
+BpmnDesigner : setIconfontBackgroundColor();
+BpmnDesigner : getAllElementsFromCanvas();
+BpmnDesigner : removeShapeFromCanvas();
+BpmnDesigner : removeConnectionFromCanvas();
+BpmnDesigner : syncProperties2Canvas();
+BpmnDesigner : renderXML2Canvas();
+BpmnDesigner : doClear();
+BpmnDesigner : isReadOnly();
+BpmnDesigner : stringifyProcess();
+BpmnDesigner : layoutProcess();
+BpmnDesigner : createAutoLayoutBpmn();
+BpmnDesigner : genProcessXML();
+BpmnDesigner : initErrorCatch();
+BpmnDesigner : removeErrorCatch();
+BpmnDesigner : getElementFromCanvas();
+
+BpmnDesigner <|-- Designer
+
+Designer : bpmnId;
+Designer : bpmnName;
+Designer : bpmnType;
+Designer : factory;
+Designer : nodes;
+Designer : lines;
+Designer : compDesigner;
+Designer : compareType;
+Designer : selectable;
+Designer : eventBus;
+Designer : lastClickID;
+Designer : selectedID;
+Designer : resting;
+Designer : clickCnt;
+Designer : clickTimer;
+
+Designer : paint2Canvas();
+Designer : autoLayout();
+Designer : transferTreeData();
+Designer : syncProperties2Element();
+Designer : getStartNode();
+Designer : getEndNode();
+Designer : getElementByID();
+Designer : getAllNodes();
+Designer : getAllLines();
+Designer : clear();
+Designer : getEventBus();
+Designer : initListeners();
+Designer : handleDblClick();
+Designer : handleElementClick();
+Designer : handleElementDblClick();
+Designer : handleShapeAdded();
+Designer : handleConnectionAdded();
+Designer : handleShapeRemoved();
+Designer : handleConnectRemoved();
+Designer : validateElements();
+Designer : isEventFlow();
+Designer : removeNode();
+Designer : removeLine();
+
+Error <|-- DesignerError
+
+DesignerError : bpmnDesigner;
+DesignerError : errorArgsStr;
+
+DesignerError : throw();
+
+
+abstract BpmnApi
+
+
+BpmnApi : undo();
+BpmnApi : redo();
+BpmnApi : zoomByRadio();
+BpmnApi : zoom2FitView();
+BpmnApi : transferXML();
+BpmnApi : transferSVG();
+BpmnApi : setShapeStrokeColor();
+BpmnApi : setShapeNormal();
+BpmnApi : setShapeError();
+BpmnApi : setShapeSelected();
+BpmnApi : setShapeUnSelected();
+abstract TDesigner
+
+
+TDesigner : paint2Canvas();
+TDesigner : autoLayout();
+TDesigner : syncProperties2Element();
+TDesigner : getElementByID();
+TDesigner : getAllNodes();
+TDesigner : clear();
+TDesigner : transferTreeData();
+TDesigner : getEventBus();
+
+EventBus : $bus;
+EventBus : emit;
+EventBus : addListener;
+
+EventBus : batchAddListeners();
+EventBus : removeListeners();
+
+abstract AbstractIterator
+
+
+AbstractIterator : next();
+
+AbstractIterator <|-- BpmnDFSIterator
+
+BpmnDFSIterator : startNode;
+BpmnDFSIterator : stack;
+
+BpmnDFSIterator : next();
+BpmnDFSIterator : hasNext();
+
+BpmnAbstractIterator <|-- BpmnNodeIterator
+
+BpmnNodeIterator : node;
+BpmnNodeIterator : index;
+
+BpmnNodeIterator : next();
+BpmnAbstractIterator : node;
+
+
+BpmnAbstractIterator <|-- BpmnNullIterator
+
+BpmnNullIterator : node;
+
+BpmnNullIterator : next();
+
+abstract AbstractValidator
+AbstractValidator : designer;
+AbstractValidator : visitor;
+AbstractValidator : validatedNodes;
+
+AbstractValidator : setShapeError();
+AbstractValidator : setShapeNormal();
+AbstractValidator : createBpmnIterator();
+AbstractValidator : validateNode();
+AbstractValidator : preValidate();
+AbstractValidator : clearValidatedNodes();
+AbstractValidator : _validate();
+AbstractValidator : validate();
+
+AbstractValidator <|-- AntiFraudValidator
+
+AntiFraudValidator : designer;
+AntiFraudValidator : visitor;
+AntiFraudValidator : MAX_CONDITION_COUNT;
+AntiFraudValidator : validateNodeCountConfig;
+
+AntiFraudValidator : createBpmnIterator();
+AntiFraudValidator : validateNode();
+AntiFraudValidator : validateConditionInWholePath();
+AntiFraudValidator : validateGroupInWholePath();
+AntiFraudValidator : validateWholePath();
+AntiFraudValidator : preValidate();
+AntiFraudValidator : getTargetNodes();
+AntiFraudValidator : validateNodeCount();
+AntiFraudValidator : validateCircle();
+AntiFraudValidator : validate();
+
+AbstractValidator <|-- CreditPolicyValidator
+
+CreditPolicyValidator : designer;
+CreditPolicyValidator : visitor;
+
+CreditPolicyValidator : createBpmnIterator();
+CreditPolicyValidator : validate();
+
+RuleProvider <|-- CustomRules
+
+
+
+
+
+Provider : $inject;
+
+Provider : injectModules();
+Provider : _createNode();
+Provider : _appendNode();
+Provider : createTask();
+Provider : appendTask();
+Provider : getNodeConstructor();
+TypeTaskConfig : group;
+TypeTaskConfig : className;
+TypeTaskConfig : title;
+TypeTaskConfig : type;
+TypeTaskConfig : options;
+
+
+Element <|-- Line
+
+Line : xmlNodeType;
+Line : className;
+Line : index;
+Line : fromId;
+Line : toId;
+Line : nodeType;
+
+Line : toXML();
+Line : toBranch();
+Line : saveBusinessInfo();
+Line : getBusinessInfo();
+Line : isElse();
+Line : accept();
+Line : validate();
+Line : beforeAdded();
+Line : afterAdded();
+Line : afterRemoved();
+Line : compareTo();
+
+Node <|-- ConditionNode
+
+ConditionNode : xmlNodeType;
+ConditionNode : className;
+
+ConditionNode : beforeSelected();
+ConditionNode : toTreeNode();
+ConditionNode : accept();
+ConditionNode : validate();
+ConditionNode : getExpression();
+ConditionNode : compareTo();
+
+Node <|-- DefaultNode
+
+
+
+DefaultNode : accept();
+DefaultNode : toTreeNode();
+
+Node <|-- EndEventNode
+
+EndEventNode : xmlNodeType;
+EndEventNode : className;
+
+EndEventNode : toTreeNode();
+EndEventNode : accept();
+EndEventNode : validate();
+
+Node <|-- GroupNode
+
+
+
+GroupNode : beforeSelected();
+GroupNode : toTreeNode();
+GroupNode : accept();
+GroupNode : validate();
+GroupNode : compareTo();
+
+Element <|-- Node
+
+abstract Node
+Node : xmlNodeType;
+Node : className;
+Node : renderOptions;
+Node : inLines;
+Node : outLines;
+Node : nodeType;
+Node : showOnContextPad;
+Node : hideOnContextPad;
+
+Node : createIterator();
+Node : toXML();
+Node : toTreeNode4AF();
+Node : toTreeNode4Credit();
+Node : toTreeNode();
+Node : getAllLineIndex();
+Node : getMaxLineIndex();
+Node : createNewIndex();
+Node : saveBusinessInfo();
+Node : getBusinessInfo();
+Node : validate();
+Node : beforeAdded();
+Node : afterAdded();
+Node : updateNodeCompareStatus();
+Node : baseCompareTo();
+Node : compareTo();
+Node : handleLinesLessThan();
+Node : handleLinesMoreThan();
+Node : getNodes();
+
+Node <|-- OutputNode
+
+OutputNode : className;
+
+OutputNode : beforeSelected();
+OutputNode : toTreeNode();
+OutputNode : accept();
+OutputNode : validate();
+OutputNode : compareTo();
+OutputNode : beforeAdded();
+
+Node <|-- ProcessNode
+
+ProcessNode : className;
+
+ProcessNode : beforeSelected();
+ProcessNode : toTreeNode();
+ProcessNode : accept();
+ProcessNode : validate();
+ProcessNode : compareTo();
+
+Node <|-- RiskPolicyNode
+
+
+
+RiskPolicyNode : toTreeNode();
+RiskPolicyNode : accept();
+RiskPolicyNode : deleteConfirm();
+
+Node <|-- StartEventNode
+
+StartEventNode : xmlNodeType;
+StartEventNode : className;
+
+StartEventNode : toTreeNode();
+StartEventNode : accept();
+StartEventNode : validate();
+
+abstract AbstractVisitor
+AbstractVisitor : designer;
+AbstractVisitor : findAccessNodes;
+
+AbstractVisitor : visitBaseLine();
+AbstractVisitor : visitStart();
+AbstractVisitor : visitEnd();
+AbstractVisitor : visitDefault();
+
+AbstractVisitor <|-- AntiFraudAbstractVisitor
+
+abstract AntiFraudAbstractVisitor
+
+
+AntiFraudAbstractVisitor : visitCondition();
+AntiFraudAbstractVisitor : visitGroup();
+AntiFraudAbstractVisitor : visitProcess();
+AntiFraudAbstractVisitor : visitOutput();
+AntiFraudAbstractVisitor : getProcessFeatureList();
+AntiFraudAbstractVisitor : getAllProcessFeatureList();
+AntiFraudAbstractVisitor : getCurrentProcessFeatureList();
+
+AntiFraudAbstractVisitor <|-- AntiFraudCompareVisitor
+
+
+
+AntiFraudCompareVisitor : updateNodeCompareStatus();
+AntiFraudCompareVisitor : getCompareNode();
+AntiFraudCompareVisitor : baseCompareTo();
+AntiFraudCompareVisitor : visitStart();
+AntiFraudCompareVisitor : visitEnd();
+AntiFraudCompareVisitor : visitDefault();
+AntiFraudCompareVisitor : visitBaseLine();
+AntiFraudCompareVisitor : visitGroup();
+AntiFraudCompareVisitor : visitCondition();
+AntiFraudCompareVisitor : visitProcess();
+AntiFraudCompareVisitor : visitOutput();
+
+AntiFraudAbstractVisitor <|-- AntiFraudConfigVisitor
+
+AntiFraudConfigVisitor : mergeProcessFeatureList;
+
+AntiFraudConfigVisitor : visitStart();
+AntiFraudConfigVisitor : visitEnd();
+AntiFraudConfigVisitor : ifHasOtherElseCondition();
+AntiFraudConfigVisitor : isConditionLine();
+AntiFraudConfigVisitor : getConditionOutLength();
+AntiFraudConfigVisitor : visitBaseLine();
+AntiFraudConfigVisitor : visitCondition();
+AntiFraudConfigVisitor : visitGroup();
+AntiFraudConfigVisitor : getProcessFeatureByMetrics();
+AntiFraudConfigVisitor : visitOutput();
+AntiFraudConfigVisitor : visitProcess();
+
+AntiFraudAbstractVisitor <|-- AntiFraudTracingConfigVisitor
+
+
+
+AntiFraudTracingConfigVisitor : visitStart();
+AntiFraudTracingConfigVisitor : visitEnd();
+AntiFraudTracingConfigVisitor : visitBaseLine();
+AntiFraudTracingConfigVisitor : visitCondition();
+AntiFraudTracingConfigVisitor : visitGroup();
+AntiFraudTracingConfigVisitor : visitOutput();
+AntiFraudTracingConfigVisitor : visitProcess();
+ITracingPanelConfig : element;
+ITracingPanelConfig : panelName;
+ITracingPanelConfig : panelProps;
+
+
+AntiFraudAbstractVisitor <|-- AntiFraudValidateVisitor
+
+AntiFraudValidateVisitor : context;
+
+AntiFraudValidateVisitor : validateConditionLines();
+AntiFraudValidateVisitor : visitStart();
+AntiFraudValidateVisitor : visitEnd();
+AntiFraudValidateVisitor : visitBaseLine();
+AntiFraudValidateVisitor : validateProcessGroupResult();
+AntiFraudValidateVisitor : validateFeatureCount();
+AntiFraudValidateVisitor : validateProcessCount();
+AntiFraudValidateVisitor : visitProcess();
+AntiFraudValidateVisitor : validProcessFeatureInOutput();
+AntiFraudValidateVisitor : visitOutput();
+AntiFraudValidateVisitor : visitGroup();
+AntiFraudValidateVisitor : visitCondition();
+AntiFraudValidateVisitor : validateGroupResults();
+AntiFraudValidateVisitor : validateProcessFeatures();
+AntiFraudValidateVisitor : validateNodeName();
+
+AbstractVisitor <|-- CreditPolicyAbstractVisitor
+
+abstract CreditPolicyAbstractVisitor
+
+
+CreditPolicyAbstractVisitor : visitRiskPolicy();
+
+CreditPolicyAbstractVisitor <|-- CreditPolicyConfigVisitor
+
+
+
+CreditPolicyConfigVisitor : visitStart();
+CreditPolicyConfigVisitor : visitEnd();
+CreditPolicyConfigVisitor : visitBaseLine();
+CreditPolicyConfigVisitor : visitRiskPolicy();
+
+CreditPolicyAbstractVisitor <|-- CreditPolicyTracingConfigVisitor
+
+
+
+CreditPolicyTracingConfigVisitor : visitStart();
+CreditPolicyTracingConfigVisitor : visitEnd();
+CreditPolicyTracingConfigVisitor : visitBaseLine();
+CreditPolicyTracingConfigVisitor : visitRiskPolicy();
+ITracingPanelConfig : element;
+ITracingPanelConfig : panelName;
+
+
+CreditPolicyAbstractVisitor <|-- CreditPolicyValidateVisitor
+
+CreditPolicyValidateVisitor : riskPolicyMap;
+
+CreditPolicyValidateVisitor : visitStart();
+CreditPolicyValidateVisitor : visitEnd();
+CreditPolicyValidateVisitor : visitBaseLine();
+CreditPolicyValidateVisitor : validateInputOutput();
+CreditPolicyValidateVisitor : validateRiskPolicyNode();
+CreditPolicyValidateVisitor : visitRiskPolicy();
+
+@enduml
